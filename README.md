@@ -29,9 +29,6 @@ List things you need know and use for this application.
 2. Install Intellij Idea
    
 3. Install java 1.8
-   ```sh
-   npm install
-   ```
 
 4. Download OpenCV
    ```
