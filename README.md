@@ -17,6 +17,7 @@ To get a local copy up and running follow these simple example steps.
 List things you need know and use for this application.
 * Java 1.8
 * JavaFx 11.0.2
+* Scene Builder 18.0.0
 * OpenCV 3.4.2-0
 * Intellij - latest version
 
@@ -30,12 +31,22 @@ List things you need know and use for this application.
    
 3. Install java 1.8
 
-4. Download OpenCV
+4. Install Scene Builder from
+   ```
+   https://gluonhq.com/products/scene-builder/
+   ```
+
+5. Follow this tutorial to configure Intellij to open .fxml files with Scene Builder:
+   ```
+   https://www.jetbrains.com/help/idea/opening-fxml-files-in-javafx-scene-builder.html#open-in-scene-builder
+   ```
+
+6. Download OpenCV
    ```
    https://opencv.org/releases/
    ```
 
-5. Follow this tutorial to using OpenCV with Intellij:
+7. Follow this tutorial to using OpenCV with Intellij:
    ```
    https://medium.com/@aadimator/how-to-set-up-opencv-in-intellij-idea-6eb103c1d45c
    ```
