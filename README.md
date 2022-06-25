@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About The Project1
 
 This is an application developed for learning purposes for JavaFx technologies in conjunction with OpenCV. This system will present an interface that contains a panel divided into two parts, where one displays an image loaded from your computer and the other the image modified through OpenCV marking objects detected in the image with some information. Below is the information necessary for installing and running the application.
 
