@@ -34,11 +34,13 @@ List things you need know and use for this application.
    ```
 
 4. Download OpenCV
-   ```https://opencv.org/releases/
+   ```
+   https://opencv.org/releases/
    ```
 
 5. Follow this tutorial to using OpenCV with Intellij:
-   ```https://medium.com/@aadimator/how-to-set-up-opencv-in-intellij-idea-6eb103c1d45c
+   ```
+   https://medium.com/@aadimator/how-to-set-up-opencv-in-intellij-idea-6eb103c1d45c
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
