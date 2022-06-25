@@ -1,0 +1,4 @@
+.image-view-background {
+    -fx-background-image: url('../images/bg-canvas.png');
+    -fx-background-repeat: repeat;
+}
