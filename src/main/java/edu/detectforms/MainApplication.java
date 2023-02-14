@@ -13,6 +13,15 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
+
+// Apagar....
+import org.opencv.core.*;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainApplication extends Application {
 
     private static MainApplication mainApplication;

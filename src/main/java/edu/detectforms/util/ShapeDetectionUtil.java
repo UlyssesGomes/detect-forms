@@ -31,21 +31,12 @@ public class ShapeDetectionUtil {
     }
 
     private Mat processImage(Mat mat) {
-        final Mat processed = new Mat(mat.height(), mat.width(), mat.type());
-        // Blur an image using a Gaussian filter
-        Imgproc.GaussianBlur(mat, processed, new Size(7, 7), 1);
+        Mat gray = new Mat();
+        Imgproc.cvtColor(mat, gray, Imgproc.COLOR_BGR2GRAY);
 
-        // Switch from RGB to GRAY
-        Imgproc.cvtColor(processed, processed, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.threshold(gray, gray, 100, 255, Imgproc.THRESH_BINARY);
 
-        // Find edges in an image using the Canny algorithm
-        Imgproc.Canny(processed, processed, 200, 25);
-
-        // Dilate an image by using a specific structuring element
-        // https://en.wikipedia.org/wiki/Dilation_(morphology)
-        Imgproc.dilate(processed, processed, new Mat(), new Point(-1, -1), 1);
-
-        return processed;
+        return gray;
     }
 
     private void drawInfo(Mat originalImage, MatOfPoint contour, double value, Rect  rect, Scalar scalar) {
@@ -73,105 +64,72 @@ public class ShapeDetectionUtil {
         );
     }
 
-    private void findInnerContour(MatOfPoint contourProcessed, Mat originalImage) {
-
-//        byte [] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-//        Mat frame = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
-//        frame.put(0, 0, data);
-//        return frame;
+    private void biggestContour(MatOfPoint contourProcessed, Mat originalImage) {
 
         int sum = 0;
+        Point maxPoint = new Point(0.0, 0.0);
+        Point minPoint = new Point( Double.MAX_VALUE,  Double.MAX_VALUE);
         for(Point p : contourProcessed.toArray()) {
-            System.out.println((sum++) + " Point: " + p.toString());
-        }
+            if(maxPoint.x < p.x)
+                maxPoint.x = p.x;
 
-//        Mat proc2 = new Mat(contourProcessed.size(), CvType.CV_8UC3);
-//        proc2.put(0, 0, contourProcessed.getData());
-//        // Find contours of an image
-//        final List<MatOfPoint> allContours = new ArrayList<>();
-//        Imgproc.findContours(
-//                contourProcessed,
-//                allContours,
-//                new Mat(contourProcessed.size(), contourProcessed.type()),
-//                Imgproc.RETR_EXTERNAL,
-//                Imgproc.CHAIN_APPROX_NONE
-//        );
-//
-//        // Filter out noise and display contour area value
-//        final List<MatOfPoint> filteredContours = allContours.stream()
-//                .filter(contour -> {
-//                    final double value = Imgproc.contourArea(contour);
-//                    final Rect rect = Imgproc.boundingRect(contour);
-//
-//                    final boolean isNotNoise = value > 100;
-//
-//                    if (isNotNoise) {
-//                        drawInfo(originalImage, contour, value, rect, new Scalar(124, 0, 252));
-//                    }
-//
-//                    return isNotNoise;
-//                }).collect(Collectors.toList());
-//
-//        // Mark contours
-//        Imgproc.drawContours(
-//                originalImage,
-//                filteredContours,
-//                -1, // Negative value indicates that we want to draw all of contours
-//                new Scalar(124, 0, 252), // Green color
-//                2 // line width
-//        );
+            if(maxPoint.y < p.y)
+                maxPoint.y = p.y;
+
+            if(minPoint.x > p.x)
+                minPoint.x = p.x;
+
+            if(minPoint.y > p.y)
+                minPoint.y = p.y;
+        }
+        System.out.println("max (" + maxPoint.x + ", " + maxPoint.y + ")");
+        System.out.println("min (" + minPoint.x + ", " + minPoint.y + ")");
     }
 
     private void markOuterContour(final Mat processedImage, final Mat originalImage) {
         // Find contours of an image
         final List<MatOfPoint> allContours = new ArrayList<>();
+        Mat hierarchy = new Mat();
         Imgproc.findContours(
                 processedImage,
                 allContours,
-                new Mat(processedImage.size(), processedImage.type()),
-                Imgproc.RETR_EXTERNAL,
-                Imgproc.CHAIN_APPROX_NONE
+                hierarchy,
+                Imgproc.RETR_CCOMP,
+                Imgproc.CHAIN_APPROX_SIMPLE
         );
 
-
-        // Filter out noise and display contour area value
-        final List<MatOfPoint> filteredContours = allContours.stream()
-                .filter(contour -> {
-                    final double value = Imgproc.contourArea(contour);
-                    final Rect rect = Imgproc.boundingRect(contour);
-
-                    final boolean isNotNoise = value > 5000;
-
-                    if (isNotNoise) {
-                        drawInfo(originalImage, contour, value, rect, new Scalar(124, 252, 0));
-                    }
-
-                    return isNotNoise;
-                }).collect(Collectors.toList());
-
+        double value;
+        Rect rect;
         MatOfPoint biggestContour = null;
         double contourValue = 0;
-        for(MatOfPoint contour : filteredContours) {
-            double value = Imgproc.contourArea(contour);
-            if (biggestContour == null)
-                biggestContour = contour;
-            else if (contourValue < value) {
-                contourValue = value;
-                biggestContour = contour;
+        for (int i = 0; i < allContours.size(); i++) {
+            if (hierarchy.get(0, i)[3] != -1) {
+
+                MatOfPoint contour = allContours.get(i);
+                value = Imgproc.contourArea(contour);
+                rect = Imgproc.boundingRect(contour);
+
+                final boolean isNotNoise = value > 200;
+
+                if (isNotNoise) {
+                    // draw external shape
+                    Imgproc.drawContours(originalImage, allContours, i, new Scalar(124, 252, 0), 2);
+                    // draw info about current shape
+                    drawInfo(originalImage, contour, value, rect, new Scalar(124, 252, 0));
+
+                    value = Imgproc.contourArea(contour);
+                    if (biggestContour == null)
+                        biggestContour = contour;
+                    else if (contourValue < value) {
+                        contourValue = value;
+                        biggestContour = contour;
+                    }
+                }
             }
         }
 
         System.out.println("Biggest area: " + contourValue);
-        findInnerContour(biggestContour, originalImage);
-
-        // Mark contours
-        Imgproc.drawContours(
-                originalImage,
-                filteredContours,
-                -1, // Negative value indicates that we want to draw all of contours
-                new Scalar(124, 252, 0), // Green color
-                2 // line width
-        );
+        biggestContour(biggestContour, originalImage);
     }
 
     public BufferedImage convertMatToBufferedImage(Mat mat) {
