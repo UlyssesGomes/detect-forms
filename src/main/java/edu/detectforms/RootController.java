@@ -48,8 +48,8 @@ public class RootController extends Controller {
     private void configureFileChooser() {
         fileChooser = new FileChooser();
         fileChooser.setTitle("View Pictures");
-//        fileChooser.setInitialDirectory(
-//                new File(System.getProperty("user.home"))
-//        );
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"), "Desktop")
+        );
     }
 }

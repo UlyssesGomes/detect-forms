@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class ShapeDetectionUtil {
     private Mat frame;
+    private int noiseValueFilter = 200;
 
     public void openMatImage(File file) {
         try {
@@ -69,21 +70,23 @@ public class ShapeDetectionUtil {
         int sum = 0;
         Point maxPoint = new Point(0.0, 0.0);
         Point minPoint = new Point( Double.MAX_VALUE,  Double.MAX_VALUE);
-        for(Point p : contourProcessed.toArray()) {
-            if(maxPoint.x < p.x)
-                maxPoint.x = p.x;
+        if(contourProcessed != null) {
+            for (Point p : contourProcessed.toArray()) {
+                if (maxPoint.x < p.x)
+                    maxPoint.x = p.x;
 
-            if(maxPoint.y < p.y)
-                maxPoint.y = p.y;
+                if (maxPoint.y < p.y)
+                    maxPoint.y = p.y;
 
-            if(minPoint.x > p.x)
-                minPoint.x = p.x;
+                if (minPoint.x > p.x)
+                    minPoint.x = p.x;
 
-            if(minPoint.y > p.y)
-                minPoint.y = p.y;
+                if (minPoint.y > p.y)
+                    minPoint.y = p.y;
+            }
+            System.out.println("max (" + maxPoint.x + ", " + maxPoint.y + ")");
+            System.out.println("min (" + minPoint.x + ", " + minPoint.y + ")");
         }
-        System.out.println("max (" + maxPoint.x + ", " + maxPoint.y + ")");
-        System.out.println("min (" + minPoint.x + ", " + minPoint.y + ")");
     }
 
     private void markOuterContour(final Mat processedImage, final Mat originalImage) {
@@ -109,7 +112,7 @@ public class ShapeDetectionUtil {
                 value = Imgproc.contourArea(contour);
                 rect = Imgproc.boundingRect(contour);
 
-                final boolean isNotNoise = value > 200;
+                final boolean isNotNoise = value > noiseValueFilter;
 
                 if (isNotNoise) {
                     // draw external shape
@@ -145,6 +148,8 @@ public class ShapeDetectionUtil {
 
     public Mat bufferedImageToMat(BufferedImage image) {
         byte [] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        // TODO - verify image channels (3 or 4 channels, depends of image type) amount before set CvType.
+        //  Maybe a better way is transform any image to 3 channels image.
         Mat frame = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
         frame.put(0, 0, data);
         return frame;
