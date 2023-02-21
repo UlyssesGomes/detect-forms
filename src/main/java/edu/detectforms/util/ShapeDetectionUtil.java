@@ -25,7 +25,7 @@ public class ShapeDetectionUtil {
     public void openMatImage(File file) {
         try {
             BufferedImage bufferedImage = ImageIO.read(file);
-            frame = bufferedImageToMat(bufferedImage);
+            frame = Imgcodecs.imread(file.getAbsolutePath());;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -146,14 +146,33 @@ public class ShapeDetectionUtil {
         return image;
     }
 
+    // TODO - this method is not necessary now, but in the future implement convertion ABGR to BGRA
     public Mat bufferedImageToMat(BufferedImage image) {
+        System.out.println("Number of bands: " + image.getRaster().getNumBands());
+        switch(image.getType()) {
+            case BufferedImage.TYPE_INT_RGB:
+                System.out.println("tipo rgb");
+                break;
+            case BufferedImage.TYPE_INT_ARGB:
+                System.out.println("tipo ARGB");
+
+                break;
+            case BufferedImage.TYPE_4BYTE_ABGR:
+                System.out.println("tipo ABGR");
+                break;
+            case BufferedImage.TYPE_3BYTE_BGR:
+
+                System.out.println("tipo bgr");
+                break;
+        }
+
         byte [] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        // TODO - verify image channels (3 or 4 channels, depends of image type) amount before set CvType.
-        //  Maybe a better way is transform any image to 3 channels image.
+
         Mat frame = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
         frame.put(0, 0, data);
         return frame;
     }
+
 
     public void drawImage(ImageView originalView, ImageView processedView) {
         Mat processed = processImage(frame);
