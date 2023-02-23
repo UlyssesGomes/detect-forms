@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ShapeDetectionUtil {
     private Mat frame;
@@ -25,7 +24,7 @@ public class ShapeDetectionUtil {
     public void openMatImage(File file) {
         try {
             BufferedImage bufferedImage = ImageIO.read(file);
-            frame = Imgcodecs.imread(file.getAbsolutePath());;
+            frame = Imgcodecs.imread(file.getAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -185,5 +184,9 @@ public class ShapeDetectionUtil {
         byteMat = new MatOfByte();
         Imgcodecs.imencode(".bmp", processed, byteMat);
         processedView.setImage(new Image(new ByteArrayInputStream(byteMat.toArray())));
+    }
+
+    public Mat getMatFrame() {
+        return frame;
     }
 }
