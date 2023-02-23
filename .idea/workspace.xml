@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70f8516b-26ed-4386-b57a-58cf8d2a3211" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/edu/detectforms/util/ShapeValidationInterface.java" afterDir="false" />
+    <list default="true" id="70f8516b-26ed-4386-b57a-58cf8d2a3211" name="Changes" comment="feat: mouse virtual position method implementation.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/detectforms/ImageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/detectforms/ImageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/detectforms/util/ShapeDetectionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/detectforms/util/ShapeDetectionUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/edu/detectforms/ImageView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/detectforms/ImageView.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,6 +109,10 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: mouse virtual position method implementation." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: mouse virtual position method implementation." />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -120,19 +121,14 @@
           <line>903</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/detectforms/util/ShapeDetectionUtil.java</url>
-          <line>117</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
-        <watch expression="CvType.channels(t)" language="JAVA" />
-        <watch expression="image.getHeight()" language="JAVA" />
-        <watch expression="image.getWidth()" language="JAVA" />
-        <watch expression="data.length" language="JAVA" />
+        <watch expression="topImageView.getX()" language="JAVA" />
+        <watch expression="topImageView.getY()" language="JAVA" />
+        <watch expression="topImageView.viewportProperty()" language="JAVA" />
+        <watch expression="topImageView.viewportProperty()" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

@@ -1,15 +1,14 @@
 package edu.detectforms;
 
 import edu.detectforms.util.ShapeDetectionUtil;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,23 +35,22 @@ public class ImageController extends Controller {
         bottomImageView.fitHeightProperty().bind(bottomPane.heightProperty());
 
         shapeDetectionUtil = new ShapeDetectionUtil();
-        System.out.println("set on mouse move");
-//        topPane.setOnMouseMoved(event -> handleMouseMove(event));
-//        topPane.setOnMouseClicked(event -> handleMouseMove(event));
-//        topImageView.addEventHandler(MouseEvent.MOUSE_PRESSED,
-//                new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent mouseEvent) {
-//                        System.out.println("clicou");
-//                    }
-//                });
     }
 
     @FXML
     private void handleMouseMove(MouseEvent event) {
         Mat image = shapeDetectionUtil.getMatFrame();
-        labelPosition.setText("W: " + image.width() + "\nH: " + image.height() +  "\nX: " + event.getX() + "\nY: " + event.getY());
-//        topPane.setVisible(false);
+        if (image != null) {
+            Point virtualPosition = getMouseVirtualPosition(image, event);
+            labelPosition.setText("W: " + image.width() + "\nH: " + image.height() +  "\nX: " + virtualPosition.x + "\nY: " + virtualPosition.y);
+        }
+    }
+
+    private Point getMouseVirtualPosition(Mat image, MouseEvent event) {
+        double X = (event.getX() * image.width()) / topImageView.getLayoutBounds().getWidth();
+        double Y = (event.getY() * image.height()) /topImageView.getLayoutBounds().getHeight();
+
+        return new Point(X, Y);
     }
 
 
@@ -60,7 +58,7 @@ public class ImageController extends Controller {
         return getClass().getResource(path).getFile();
     }
 
-    public void openImage(File file) throws FileNotFoundException {
+    public void openImage(File file) {
         Image image = new Image(file.toURI().toString());
         topImageView.setImage(image);
 
